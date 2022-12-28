@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/activity_login.xml" value="0.264" />
-        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/activity_main.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/drawable/ic_baseline_emoji_emotions_24.xml" value="0.121" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.121" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/activity_login.xml" value="0.4" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/activity_register.xml" value="0.264" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/layout/fragment_home.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/62821/AndroidStudioProjects/ProjectUASNMP/app/src/main/res/menu/bottom_menu.xml" value="0.264" />
       </map>
     </option>
   </component>

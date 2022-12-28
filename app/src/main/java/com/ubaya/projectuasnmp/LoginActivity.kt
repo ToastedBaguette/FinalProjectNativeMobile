@@ -32,9 +32,9 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("apiresult", it)
                     val obj = JSONObject(it)
                     if(obj.getString("result")=="OK"){
-                        val data = obj.getJSONArray("data")
                         val intent = Intent(this, MainActivity::class.java)
                         this.startActivity(intent)
+                        this.finish()
                     }
                 },
                 Response.ErrorListener {
@@ -47,6 +47,11 @@ class LoginActivity : AppCompatActivity() {
                     )
                 }
             q.add(stringRequest)
+        }
+
+        btnCreateAccount.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            this.startActivity(intent)
         }
     }
 }
