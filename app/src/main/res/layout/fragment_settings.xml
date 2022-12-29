@@ -6,9 +6,16 @@
     tools:context=".SettingsFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
+        android:id="@+id/textView6"
+        style="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:fontFamily="sans-serif-black"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/settings"
+        android:textAlignment="center"
+        android:textSize="48sp" />
 
 </FrameLayout>

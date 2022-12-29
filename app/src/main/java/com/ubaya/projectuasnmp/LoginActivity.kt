@@ -35,6 +35,8 @@ class LoginActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         this.startActivity(intent)
                         this.finish()
+                    }else{
+                        Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
                     }
                 },
                 Response.ErrorListener {
