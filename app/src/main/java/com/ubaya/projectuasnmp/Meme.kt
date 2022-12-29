@@ -1,5 +1,7 @@
 package com.ubaya.projectuasnmp
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 class Meme (val id:Int  , val image_url: String,
             val top_text:String,
             val bottom_text:String,

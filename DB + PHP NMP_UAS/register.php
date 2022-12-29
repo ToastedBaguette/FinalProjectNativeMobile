@@ -29,6 +29,6 @@
   $stmt->execute();
 
   $arr = array("result" => "OK",
-  "message" => "Account registered successfully ");
+  "message" => "Successfully create account");
    echo json_encode($arr);
 ?>

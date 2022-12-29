@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2022 at 04:36 AM
+-- Generation Time: Dec 29, 2022 at 12:24 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -29,12 +29,19 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `memes` (
   `idmemes` int(11) NOT NULL,
-  `image_url` varchar(45) NOT NULL,
+  `image_url` varchar(100) NOT NULL,
   `top_text` varchar(45) NOT NULL,
   `bottom_text` varchar(45) NOT NULL,
   `num_likes` int(11) NOT NULL,
   `users_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `memes`
+--
+
+INSERT INTO `memes` (`idmemes`, `image_url`, `top_text`, `bottom_text`, `num_likes`, `users_id`) VALUES
+(1, 'https://a.pinatafarm.com/2000x1124/b177c50844/guy-confused.jpg/m/522x0', 'WHAT', 'WHAT??', 100, 1);
 
 -- --------------------------------------------------------
 
@@ -63,7 +70,7 @@ CREATE TABLE `users` (
   `last_name` varchar(45) DEFAULT NULL,
   `password` varchar(45) NOT NULL,
   `date_regist` datetime NOT NULL,
-  `avatar_img` varchar(45) NOT NULL,
+  `avatar_img` varchar(100) NOT NULL,
   `privacy_setting` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -72,7 +79,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`idusers`, `username`, `first_name`, `last_name`, `password`, `date_regist`, `avatar_img`, `privacy_setting`) VALUES
-(1, 'testest', 'Adam', 'Bambang', 'adambambang', '2022-12-17 04:32:42', 'https://encrypted-tbn0.gstatic.com/images?q=t', 0);
+(1, 'johndoe', 'John', 'Doe', '1234', '2022-12-29 12:20:09', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDr1i25jqVHRFv8eBDwljZqXTSBVO60GRsiQ&usqp=CAU', 0);
 
 --
 -- Indexes for dumped tables
@@ -102,6 +109,18 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `memes`
+--
+ALTER TABLE `memes`
+  MODIFY `idmemes` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `meme_comments`
+--
+ALTER TABLE `meme_comments`
+  MODIFY `idmeme_comments` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
