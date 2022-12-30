@@ -1,6 +1,8 @@
 package com.ubaya.projectuasnmp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         btnSignIn.setOnClickListener{
             var username = txtLoginUsername.text.toString()
             var password = txtLoginPassword.text.toString()
+            var userId = 0
 
             val q = Volley.newRequestQueue(this)
             val url = "http://10.0.2.2/NMP_UAS/login.php"
@@ -32,6 +35,18 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("apiresult", it)
                     val obj = JSONObject(it)
                     if(obj.getString("result")=="OK"){
+                        val data = obj.getJSONObject("data")
+//                        val memeObj = data.getJSONObject()
+                        userId = data.getInt("idusers")
+
+                        var sharedFile = "com.ubaya.projectuasnmp"
+                        var shared: SharedPreferences = getSharedPreferences(sharedFile,
+                            Context.MODE_PRIVATE )
+                        var editor:SharedPreferences.Editor = shared.edit()
+
+                        editor.putInt("userId",userId)
+                        editor.apply()
+
                         val intent = Intent(this, MainActivity::class.java)
                         this.startActivity(intent)
                         this.finish()
@@ -49,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
                     )
                 }
             q.add(stringRequest)
+
         }
 
         btnCreateAccount.setOnClickListener {

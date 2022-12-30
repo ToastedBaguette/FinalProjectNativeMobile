@@ -1,0 +1,61 @@
+package com.ubaya.projectuasnmp
+
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_add_meme.*
+import kotlinx.android.synthetic.main.card_meme.*
+
+class AddMemeActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_add_meme)
+
+        var sharedFile = "com.ubaya.projectuasnmp"
+        var shared: SharedPreferences = getSharedPreferences(sharedFile,
+            Context.MODE_PRIVATE )
+        var editor: SharedPreferences.Editor = shared.edit()
+
+        btnSubmit.setOnClickListener(){
+            var userId = shared.getInt("userId",0)
+            val q= Volley.newRequestQueue(it.context)
+            val url="http://10.0.2.2/NMP_UAS/add_memes.php"
+            val stringRequest= object: StringRequest(
+                Request.Method.POST, url,
+                Response.Listener{
+                    Log.d("cekparams",it)
+                    Toast.makeText(this, "Berhasil tambah memes", Toast.LENGTH_SHORT).show() },
+                Response.ErrorListener{
+                    Log.d("cekparams",it.message.toString())
+
+                }
+            ){
+                override fun getParams() = hashMapOf(
+                    "image_url" to txtImageURLCreate.text.toString(),
+                    "top_text" to txtTopTextCreate.text.toString(),
+                    "bottom_text" to txtBottomTextCreate.text.toString(),
+                    "users_id" to userId.toString()
+                )
+            }
+            q.add(stringRequest)
+            finish()
+        }
+        btnPreview.setOnClickListener {
+            if (txtImageURLCreate.text.isNotEmpty()) {
+                var url = txtImageURLCreate.text.toString()
+                Picasso.get().load(url).into(imageMeme)
+
+                txtTopPreview.text = (txtTopTextCreate.text.toString())
+                txtBottomPreview.text = (txtBottomTextCreate.text.toString())
+            }
+        }
+    }
+}
