@@ -40,7 +40,7 @@ class MyCreationFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val q = Volley.newRequestQueue(activity)
-        val url = "http://10.0.2.2/NMP_UAS/get_My_Memes.php"
+        val url = "https://ubaya.fun/native/160420041/get_My_Memes.php"
         var stringRequest = object:StringRequest(
             Request.Method.POST, url,
             Response.Listener<String> {
@@ -108,15 +108,7 @@ class MyCreationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_my_creation, container, false)
-        var view = inflater.inflate(R.layout.fragment_my_creation, container, false)
-        var fab : FloatingActionButton? = view.findViewById(R.id.fab)
-        fab?.setOnClickListener() {
-            val intent = Intent(activity, AddMemeActivity::class.java)
-            activity?.startActivity(intent)
-        }
-        updateList()
-        return view
+        return inflater.inflate(R.layout.fragment_my_creation, container, false)
     }
 
     companion object {

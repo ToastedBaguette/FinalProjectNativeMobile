@@ -24,7 +24,7 @@ class RegisterActivity : AppCompatActivity() {
             val currentDate = sdf.format(Date())
             if (txtPassword.text.toString() == txtRptPassword.text.toString()){
                 val q = Volley.newRequestQueue(this)
-                val url = "http://10.0.2.2/NMP_UAS/register.php"
+                val url = "https://ubaya.fun/native/160420041/register.php"
 
                 var stringRequest = object: StringRequest(
                     Request.Method.POST, url,

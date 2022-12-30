@@ -27,7 +27,7 @@ class AddMemeActivity : AppCompatActivity() {
         btnSubmit.setOnClickListener(){
             var userId = shared.getInt("userId",0)
             val q= Volley.newRequestQueue(it.context)
-            val url="http://10.0.2.2/NMP_UAS/add_memes.php"
+            val url="https://ubaya.fun/native/160420041/add_memes.php"
             val stringRequest= object: StringRequest(
                 Request.Method.POST, url,
                 Response.Listener{
