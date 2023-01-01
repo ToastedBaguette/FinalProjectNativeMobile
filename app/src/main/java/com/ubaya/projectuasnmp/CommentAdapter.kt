@@ -19,7 +19,7 @@ class CommentAdapter (val comments:ArrayList<Comment>)
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         holder.v.txtNameUser.text = comments[position].first_name
 
-        if (comments[position].last_name != null){
+        if (comments[position].last_name != "null"){
             holder.v.txtNameUser.text =  holder.v.txtNameUser.text.toString() + " " + comments[position].last_name
         }
 

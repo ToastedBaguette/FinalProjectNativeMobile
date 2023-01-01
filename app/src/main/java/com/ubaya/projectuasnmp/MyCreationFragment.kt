@@ -1,7 +1,6 @@
 package com.ubaya.projectuasnmp
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -15,8 +14,6 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_my_creation.*
 import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
