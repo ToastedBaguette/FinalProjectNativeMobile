@@ -1,5 +1,6 @@
 package com.ubaya.projectuasnmp
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,11 @@ class MemeAdapter (val memes:ArrayList<Meme>)
         holder.v.txtTop.text = memes[position].top_text
         holder.v.txtBottom.text = memes[position].bottom_text
         holder.v.txtLikes.text = memes[position].num_likes.toString()
+        holder.v.btnComment.setOnClickListener{
+            val intent = Intent(holder.v.context, MemeDetailActivity::class.java)
+            intent.putExtra("meme", memes[position])
+            holder.v.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
