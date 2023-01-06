@@ -21,12 +21,21 @@ class LeaderboardAdapter(val leaderboard:ArrayList<Leaderboard>) :RecyclerView.A
         if(url.isNotEmpty()){
             Picasso.get().load(url).into(holder.v.imgLeaderboardAvatar)
         }
-//        if((leaderboard[position].privacy) == 0){
-//            holder.v.txtLeaderboardName.text = leaderboard[position].fullname
-//        }else{
-//
-//        }
-        holder.v.txtLeaderboardName.text = leaderboard[position].fullname
+        if((leaderboard[position].privacy) == 0){
+            holder.v.txtLeaderboardName.text = leaderboard[position].fullname
+        }else{
+            var name = leaderboard[position].fullname.split(" ")
+            var fullname = ""
+            for (i in name.indices) {
+                if(i==0){
+                    fullname = name[0].replaceRange(3 until name[0].length, "*".repeat(name[0].length-3))
+                }else{
+                    fullname +=  " " + "*".repeat(name[i].length)
+                }
+            }
+            holder.v.txtLeaderboardName.text = fullname;
+        }
+
         holder.v.txtLeaderboardNumLikes.text = leaderboard[position].nums_like.toString()
     }
 

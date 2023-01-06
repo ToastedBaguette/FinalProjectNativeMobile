@@ -17,14 +17,6 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.view.*
 import org.json.JSONObject
 
-var userId = 0
-var userName = ""
-
-var month = ""
-var year = ""
-var avatarImg = ""
-var privacySet = 0
-
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +26,14 @@ class LoginActivity : AppCompatActivity() {
         var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
             Context.MODE_PRIVATE )
 
+        var userId = 0
+        var userName = ""
+        var firstName = ""
+        var lastName = ""
+        var month = ""
+        var year = ""
+        var avatarImg = ""
+        var privacySet = 0
         userId = shared.getInt("userId",0)
 
         if (userId != 0){
@@ -46,13 +46,8 @@ class LoginActivity : AppCompatActivity() {
         btnSignIn.setOnClickListener{
             var username = txtLoginUsername.text.toString()
             var password = txtLoginPassword.text.toString()
-            var firstName = ""
-            var lastName = ""
-
             val q = Volley.newRequestQueue(this)
             val url = "https://ubaya.fun/native/160420041/login.php"
-
-
             var stringRequest = object:StringRequest(
                 Request.Method.POST, url,
                 Response.Listener<String> {

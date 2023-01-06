@@ -49,28 +49,9 @@ class SettingsFragment : Fragment() {
     var changeLastName:String = ""
     var checked:Int = 0
 
-    var helper = false;
-
-    @SuppressLint("SetTextI18n")
-    override fun onResume() {
-        if(lastName == "null"){
-            lastName = ""
-        }
-        txtName.text = "$firstName $lastName"
-        txtActiveStatus.text = "Active since $month $year"
-        txtSettingUsername.text = userName
-        txtSettingFirstName.hint = firstName
-        txtSettingLastName.hint = if(lastName =="") "" else lastName
-        if(avatarImg!=""){
-            Picasso.get().load(avatarImg).into(imgAvatar)
-        }
-        cBHideName.isChecked = privacySet == 1
-        super.onResume()
-    }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    fun refreshSharedPreferences(context: Context){
         val sharedFile = "com.ubaya.projectuasnmp"
-        val shared: SharedPreferences = context.getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
+        val shared: SharedPreferences = context.getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
         userId = shared.getInt("userId",0)
         userName = shared.getString("userName","").toString()
         firstName = shared.getString("firstName","").toString()
@@ -79,6 +60,28 @@ class SettingsFragment : Fragment() {
         year = shared.getString("year","").toString()
         avatarImg = shared.getString("avatarImg","").toString()
         privacySet = shared.getInt("privacySet",0)
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onResume() {
+        this.context?.let { refreshSharedPreferences(it) }
+        if(lastName == "null"){
+            lastName = ""
+        }
+        txtName.text = "$firstName $lastName"
+        txtActiveStatus.text = "Active since $month $year"
+        txtSettingUsername.text = userName
+        txtSettingFirstName.setText(firstName)
+        txtSettingLastName.setText(if(lastName =="") "" else lastName)
+        if(avatarImg!=""){
+            Picasso.get().load(avatarImg).into(imgAvatar)
+        }
+        cBHideName.isChecked = privacySet == 1
+        super.onResume()
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        refreshSharedPreferences(context)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,19 +109,16 @@ class SettingsFragment : Fragment() {
         var editor:SharedPreferences.Editor = shared.edit()
 
         btnSaveChanges?.setOnClickListener{
-            firstName = shared.getString("firstName","").toString()
-            lastName = shared.getString("lastName","").toString()
-            if(cBHideName.isChecked){
-                checked = 1
-            }
-            if(txtSettingFirstName?.text.isNullOrBlank()) {
-                Toast.makeText(activity, "Don't leave your first name empty", Toast.LENGTH_SHORT).show()
-            }else{
+            if(!txtSettingFirstName.text.isNullOrBlank()){
+                firstName = shared.getString("firstName","").toString()
+                lastName = shared.getString("lastName","").toString()
+                checked = if(cBHideName.isChecked){ 1 } else{ 0 }
                 changeFirstName = txtSettingFirstName?.text.toString()
-                changeLastName = if(txtSettingLastName?.text.isNullOrBlank()) { "" } else { txtSettingLastName.text.toString() }
+                changeLastName = if(txtSettingLastName?.text.isNullOrBlank()) { "" }else{ txtSettingLastName?.text.toString() }
                 val q = Volley.newRequestQueue(activity)
                 val url = "https://ubaya.fun/native/160420041/changeprofile.php"
                 var stringRequest =
+                    @SuppressLint("SetTextI18n")
                     object:StringRequest(Request.Method.POST, url,
                         Response.Listener<String> {
                             Log.d("apiresult", it)
@@ -130,11 +130,10 @@ class SettingsFragment : Fragment() {
                                 editor.apply()
 
                                 txtName?.text = "$changeFirstName $changeLastName"
-                                txtSettingFirstName?.hint = changeFirstName
-                                txtSettingLastName?.hint = if(changeLastName =="") "" else changeLastName
-                                cBHideName?.isChecked = checked == 1
-                                txtSettingFirstName?.setText("")
-                                txtSettingLastName?.setText("")
+                                txtSettingFirstName?.setText(changeFirstName)
+                                txtSettingLastName?.setText(if(changeLastName =="") "" else changeLastName)
+                                cBHideName.isChecked = checked == 1
+
                                 Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
                             }else{
                                 Log.e("error","Failed to save")
@@ -152,6 +151,8 @@ class SettingsFragment : Fragment() {
                         )
                     }
                 q.add(stringRequest)
+            }else{
+                Toast.makeText(activity, "Don't leave the first name empty, please!", Toast.LENGTH_SHORT).show()
             }
         }
 //        imgAvatar.setOnClickListener{
