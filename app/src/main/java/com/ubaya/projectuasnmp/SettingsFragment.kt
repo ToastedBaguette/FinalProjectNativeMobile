@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
@@ -33,6 +34,8 @@ private const val ARG_PARAM2 = "param2"
 class SettingsFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
+    private val REQUEST_CODE_GALLERY = 1
+    private val REQUEST_CODE_CAMERA = 2
     var userId:Int = 0
     var userName = ""
     var firstName = ""
@@ -45,6 +48,8 @@ class SettingsFragment : Fragment() {
     var changeFirstName:String= ""
     var changeLastName:String = ""
     var checked:Int = 0
+
+    var helper = false;
 
     @SuppressLint("SetTextI18n")
     override fun onResume() {
@@ -94,6 +99,8 @@ class SettingsFragment : Fragment() {
         val txtSettingLastName = v.findViewById<EditText>(R.id.txtSettingLastName)
         val cBHideName = v.findViewById<CheckBox>(R.id.cBHideName)
         val fabLogout = v.findViewById<FloatingActionButton>(R.id.fabLogOut)
+        val imgAvatar = v.findViewById<ImageView>(R.id.imgAvatar)
+
         val sharedFile = "com.ubaya.projectuasnmp"
         val shared: SharedPreferences = v.context.getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
         var editor:SharedPreferences.Editor = shared.edit()
@@ -101,7 +108,6 @@ class SettingsFragment : Fragment() {
         btnSaveChanges?.setOnClickListener{
             firstName = shared.getString("firstName","").toString()
             lastName = shared.getString("lastName","").toString()
-            var showlastname =  if(lastName =="") firstName else lastName
             if(cBHideName.isChecked){
                 checked = 1
             }
@@ -148,6 +154,22 @@ class SettingsFragment : Fragment() {
                 q.add(stringRequest)
             }
         }
+//        imgAvatar.setOnClickListener{
+//            val options = arrayOf<CharSequence>("Take from Gallery", "Take from Camera")
+//            val builder = AlertDialog.Builder(requireContext())
+//            builder.setTitle("Choose Picture")
+//            builder.setItems(options) { dialog, item ->
+//                if (options[item] == "Take from Gallery") {
+//                    val intent = Intent(Intent.ACTION_PICK)
+//                    intent.type = "image/*"
+//                    startActivityForResult(intent, REQUEST_CODE_GALLERY)
+//                } else if (options[item] == "Take from Camera") {
+//                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                    startActivityForResult(intent, REQUEST_CODE_CAMERA)
+//                }
+//            }
+//            builder.show()
+//        }
         fabLogout.setOnClickListener{
             val intent = Intent(activity, LoginActivity::class.java)
             editor.clear()
@@ -157,6 +179,7 @@ class SettingsFragment : Fragment() {
         }
         return v
     }
+
 
     companion object {
         @JvmStatic
