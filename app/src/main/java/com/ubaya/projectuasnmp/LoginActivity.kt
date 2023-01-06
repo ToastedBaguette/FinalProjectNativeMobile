@@ -17,26 +17,44 @@ import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.activity_register.view.*
 import org.json.JSONObject
 
+var userId = 0
+var userName = ""
+
+var month = ""
+var year = ""
+var avatarImg = ""
+var privacySet = 0
+
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        var sharedFile = "com.ubaya.projectuasnmp"
+        var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
+            Context.MODE_PRIVATE )
+
+        userId = shared.getInt("userId",0)
+
+        if (userId != 0){
+            val intent = Intent(this, MainActivity::class.java)
+            this.startActivity(intent)
+            this.finish()
+        }
+
+
         btnSignIn.setOnClickListener{
             var username = txtLoginUsername.text.toString()
             var password = txtLoginPassword.text.toString()
-            var userId = 0
-            var userName = ""
             var firstName = ""
             var lastName = ""
-            var month = ""
-            var year = ""
-            var avatarImg = ""
-            var privacySet = 0
 
             val q = Volley.newRequestQueue(this)
             val url = "https://ubaya.fun/native/160420041/login.php"
 
-            var stringRequest = object:StringRequest(Request.Method.POST, url,
+
+            var stringRequest = object:StringRequest(
+                Request.Method.POST, url,
                 Response.Listener<String> {
                     Log.d("apiresult", it)
                     val obj = JSONObject(it)
