@@ -20,8 +20,7 @@ class AddMemeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_meme)
 
         var sharedFile = "com.ubaya.projectuasnmp"
-        var shared: SharedPreferences = getSharedPreferences(sharedFile,
-            Context.MODE_PRIVATE )
+        var shared: SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
         var editor: SharedPreferences.Editor = shared.edit()
 
         btnSubmit.setOnClickListener(){

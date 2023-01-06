@@ -68,7 +68,6 @@ class MyCreationFragment : Fragment() {
             override fun getParams(): MutableMap<String, String>? {
                 val params = HashMap<String, String>()
                 params["users_id"] = userId.toString()
-
                 return params
             }
         }

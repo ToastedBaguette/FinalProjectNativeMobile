@@ -26,6 +26,13 @@ class LoginActivity : AppCompatActivity() {
             var username = txtLoginUsername.text.toString()
             var password = txtLoginPassword.text.toString()
             var userId = 0
+            var userName = ""
+            var firstName = ""
+            var lastName = ""
+            var month = ""
+            var year = ""
+            var avatarImg = ""
+            var privacySet = 0
 
             val q = Volley.newRequestQueue(this)
             val url = "https://ubaya.fun/native/160420041/login.php"
@@ -38,6 +45,13 @@ class LoginActivity : AppCompatActivity() {
                         val data = obj.getJSONObject("data")
 //                        val memeObj = data.getJSONObject()
                         userId = data.getInt("idusers")
+                        userName = data.getString("username")
+                        firstName = data.getString("first_name")
+                        lastName = data.getString("last_name")
+                        month = data.getString("month")
+                        year = data.getString("year")
+                        avatarImg = data.getString("avatar_img")
+                        privacySet = data.getInt("privacy_setting")
 
                         var sharedFile = "com.ubaya.projectuasnmp"
                         var shared: SharedPreferences = getSharedPreferences(sharedFile,
@@ -45,6 +59,13 @@ class LoginActivity : AppCompatActivity() {
                         var editor:SharedPreferences.Editor = shared.edit()
 
                         editor.putInt("userId",userId)
+                        editor.putString("username",userName)
+                        editor.putString("firstName",firstName)
+                        editor.putString("lastName",lastName)
+                        editor.putString("month",month)
+                        editor.putString("year",year)
+                        editor.putString("avatarImg",avatarImg)
+                        editor.putInt("privacySet",privacySet)
                         editor.apply()
 
                         val intent = Intent(this, MainActivity::class.java)
