@@ -12,23 +12,22 @@ if($c->connect_errno) {
     die();
 }
 
-    $image_url = $_POST['image_url'];
-    $top_text = $_POST['top_text'];
-    $bottom_text = $_POST['bottom_text'];
     $users_id = $_POST['users_id'];
-    $num_likes = 0;
+    $memes_id = $_POST['memes_id'];
+    $content = $_POST['content'];
+    $publish_date = $_POST['publish_date'];
 
-    $sql = "INSERT INTO `memes`(`image_url`, `top_text`, `bottom_text`, `num_likes`, `users_id`) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `meme_comments`(`users_id`, `memes_id`, `content`, `publish_date`) VALUES (?,?,?,?)";
     $stmt = $c->prepare($sql);
-    $stmt->bind_param("sssii", $image_url, $top_text, $bottom_text, $num_likes, $users_id);
+    $stmt->bind_param("iiss", $users_id, $memes_id, $content, $publish_date);
     $stmt->execute();
+    $result = $stmt->get_result();
     
     if ($stmt->affected_rows > 0) {
-        $arr=["result"=>"OK"];
+      $arr=["result"=>"OK"];
     } else {
-    $arr= ["result"=>"error"];
+      $arr= ["result"=>"ERROR"];
     }
+
     echo json_encode($arr);
-    $stmt->close();
-    $conn->close();
 ?>

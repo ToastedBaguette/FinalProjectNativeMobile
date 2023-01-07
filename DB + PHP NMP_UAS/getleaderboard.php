@@ -16,18 +16,22 @@
   }
 
   $c -> set_charset("UTF8");//beberapa browser ada yang error klo perintah ini diset
-  $sql = "SELECT * FROM memes ORDER BY idmemes DESC";
+  $sql = "SELECT CONCAT(users.first_name, ' ', users.last_name) AS fullname, users.avatar_img, SUM(memes.num_likes) AS total_likes, users.privacy_setting
+FROM users
+LEFT JOIN memes ON users.idusers = memes.users_id
+GROUP BY users.idusers
+ORDER BY total_likes DESC";
   $result =$c -> query($sql);
 
   
   if($result->num_rows > 0){
-    $memes = [];
+    $leaderboard = [];
     while ($obj = $result->fetch_assoc()) {
-      $memes[] = $obj; 
+      $leaderboard[] = $obj; 
     }
     $arr = array(
       'result' => 'OK', 
-      'data' => $memes
+      'data' => $leaderboard 
     );
   }else{
     $arr = array(

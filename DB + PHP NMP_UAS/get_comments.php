@@ -14,20 +14,23 @@
     echo json_encode($arr);
     die();
   }
+  $memes_id = $_POST['memes_id'];
 
   $c -> set_charset("UTF8");//beberapa browser ada yang error klo perintah ini diset
-  $sql = "SELECT * FROM memes ORDER BY idmemes DESC";
-  $result =$c -> query($sql);
-
+  $sql = "SELECT * FROM meme_comments INNER JOIN users ON meme_comments.users_id = users.idusers WHERE meme_comments.memes_id = ? ORDER BY meme_comments.publish_date DESC";
+  $stmt = $c->prepare($sql);
+  $stmt->bind_param("i", $memes_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
   
   if($result->num_rows > 0){
-    $memes = [];
+    $comments = [];
     while ($obj = $result->fetch_assoc()) {
-      $memes[] = $obj; 
+      $comments[] = $obj; 
     }
     $arr = array(
       'result' => 'OK', 
-      'data' => $memes
+      'data' => $comments
     );
   }else{
     $arr = array(

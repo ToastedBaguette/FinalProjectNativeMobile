@@ -12,24 +12,21 @@ if($c->connect_errno) {
     die();
 }
 
-    $username =  $_POST['username'];
-    $password = $_POST['password'];
+    $firstname =  $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $privacy = $_POST['privacySet'];
+    $idusers = $_POST['iduser'];
 
-    $sql = "select *, DATE_FORMAT(date_regist, '%b') as month, YEAR(date_regist) as year from users where username=? and password=?";
+    $sql = "UPDATE users SET first_name = ?, last_name = ?, privacy_setting = ? where idusers=?";
     $stmt = $c->prepare($sql);
-    $stmt->bind_param("ss", $username, $password);
+    $stmt->bind_param("ssii", $firstname , $lastname, $privacy, $idusers);
     $stmt->execute();
-    $res = $stmt->get_result();
 
-    $account = [];
-
-
-    if($res -> num_rows <= 0){
+    if($stmt-> affected_rows <= 0){
         $arr = ["result" => "FAILED"];
     }
     else{
-        $row = mysqli_fetch_assoc($res);
-        $arr = ["data" => $row, "result" => "OK" ];
+        $arr = ["result" => "OK" ];
     }    
 
     echo json_encode($arr);

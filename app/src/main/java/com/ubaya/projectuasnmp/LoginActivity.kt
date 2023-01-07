@@ -22,10 +22,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        var sharedFile = "com.ubaya.projectuasnmp"
-        var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
-            Context.MODE_PRIVATE )
-
         var userId = 0
         var userName = ""
         var firstName = ""
@@ -34,6 +30,10 @@ class LoginActivity : AppCompatActivity() {
         var year = ""
         var avatarImg = ""
         var privacySet = 0
+
+        var sharedFile = "com.ubaya.projectuasnmp"
+        var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
+            Context.MODE_PRIVATE )
         userId = shared.getInt("userId",0)
 
         if (userId != 0){
@@ -55,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
                     val obj = JSONObject(it)
                     if(obj.getString("result")=="OK"){
                         val data = obj.getJSONObject("data")
-//                        val memeObj = data.getJSONObject()
                         userId = data.getInt("idusers")
                         userName = data.getString("username")
                         firstName = data.getString("first_name")

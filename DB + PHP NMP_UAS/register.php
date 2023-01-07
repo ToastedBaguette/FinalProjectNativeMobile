@@ -2,7 +2,7 @@
 
   error_reporting(E_ERROR|E_PARSE);//disable error
 
-  $c = new mysqli("localhost", "root", "","projectuasnmp");
+  $c = new mysqli("localhost", "native_160420041", "ubaya", "native_160420041");
   $arr = [];
 
   if($c->connect_errno){
