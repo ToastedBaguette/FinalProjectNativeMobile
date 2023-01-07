@@ -96,7 +96,7 @@ class MyCreationFragment : Fragment() {
         var recyclerView = view?.findViewById<RecyclerView>(R.id.memesView)
         recyclerView?.layoutManager = lm
         recyclerView?.setHasFixedSize(true)
-        recyclerView?.adapter = MemeAdapter(myCreationList)
+        recyclerView?.adapter = MemeAdapter(myCreationList, userId)
     }
 
     override fun onCreateView(

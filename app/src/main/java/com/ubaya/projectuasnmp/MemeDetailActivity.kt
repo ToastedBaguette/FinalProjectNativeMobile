@@ -15,6 +15,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_meme_detail.*
+import kotlinx.android.synthetic.main.card_meme.view.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -29,16 +30,100 @@ class MemeDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meme_detail)
-        meme = intent.getParcelableExtra(ARG_MEME)
 
-        val url = meme?.image_url
-        Picasso.get().load(url).into(imgMeme)
+        val sharedFile = "com.ubaya.projectuasnmp"
+        val shared: SharedPreferences = this.getSharedPreferences(sharedFile,
+            Context.MODE_PRIVATE )
+
+        val userId = shared.getInt("userId",0)
+
+        meme = intent.getParcelableExtra(ARG_MEME)
+        val urlImg = meme?.image_url
+        Picasso.get().load(urlImg).into(imgMeme)
         txtTop.text = meme?.top_text
         txtBottom.text = meme?.bottom_text
         txtLikes.text = meme?.num_likes.toString()
         meme_id = meme?.id
 
         readComment()
+
+//      Declare icon like apperance for the first time
+        val q = Volley.newRequestQueue(this)
+        val url = "https://ubaya.fun/native/160420041/check_likes.php"
+        val stringRequest =  object : StringRequest(
+            Request.Method.POST, url,
+            Response.Listener {
+                Log.d("cekparams", it)
+                val obj = JSONObject(it)
+                if(obj.getString("result") == "LIKED") {
+                    btnLike.setImageResource(R.drawable.ic_baseline_favorite_24)
+                    btnLike.tag = R.drawable.ic_baseline_favorite_24
+                }else{
+                    btnLike.setImageResource(R.drawable.ic_outline_favorite_border_24)
+                    btnLike.tag = R.drawable.ic_outline_favorite_border_24
+                }
+
+            },
+            Response.ErrorListener {
+                Log.d("cekparams", it.message.toString())
+            }
+        )
+        {
+            override fun getParams() = hashMapOf(
+                "idmemes" to meme?.id.toString(),
+                "idusers" to userId.toString()
+            )
+        }
+        q.add(stringRequest)
+
+        btnLike.setOnClickListener(){
+            if (btnLike.tag.equals(R.drawable.ic_outline_favorite_border_24)){
+                val q = Volley.newRequestQueue(it.context)
+                val url = "https://ubaya.fun/native/160420041/add_likes.php"
+                val stringRequest =  object : StringRequest(
+                    Request.Method.POST, url,
+                    Response.Listener {
+                        Log.d("cekparams", it)
+                        var newlikes = meme?.num_likes?.plus(1)
+                        txtLikes.text = "$newlikes"
+                        btnLike.setImageResource(R.drawable.ic_baseline_favorite_24)
+                        btnLike.tag = R.drawable.ic_baseline_favorite_24
+                    },
+                    Response.ErrorListener {
+                        Log.d("cekparams", it.message.toString())
+                    }
+                )
+                {
+                    override fun getParams() = hashMapOf(
+                        "idmemes" to meme?.id.toString(),
+                        "idusers" to userId.toString()
+                    )
+                }
+                q.add(stringRequest)
+            }else{
+                val q = Volley.newRequestQueue(it.context)
+                val url = "https://ubaya.fun/native/160420041/reduce_likes.php"
+                val stringRequest =  object : StringRequest(
+                    Request.Method.POST, url,
+                    Response.Listener {
+                        Log.d("cekparams", it)
+                        var newlikes = meme?.num_likes?.minus(1)
+                        txtLikes.text = "$newlikes"
+                        btnLike.setImageResource(R.drawable.ic_outline_favorite_border_24)
+                        btnLike.tag = R.drawable.ic_outline_favorite_border_24
+                    },
+                    Response.ErrorListener {
+                        Log.d("cekparams", it.message.toString())
+                    }
+                )
+                {
+                    override fun getParams() = hashMapOf(
+                        "idmemes" to meme?.id.toString(),
+                        "idusers" to userId.toString()                    )
+                }
+                q.add(stringRequest)
+            }
+        }
 
         btnSendComment.setOnClickListener(){
             addComment()
@@ -68,7 +153,7 @@ class MemeDetailActivity : AppCompatActivity() {
                     comments.clear()
                     for(i in 0 until data.length()) {
                         val commentObj = data.getJSONObject(i)
-                        val date  = formatter.parse("2023-01-01 06:56:19")
+                        val date  = formatter.parse(commentObj.getString("publish_date"))
                         val currDate = SimpleDateFormat("DD MMM yy").format(date)
                         val comment = Comment(
                             commentObj.getString("first_name"),
