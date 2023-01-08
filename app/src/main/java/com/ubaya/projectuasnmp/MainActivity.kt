@@ -1,10 +1,13 @@
 package com.ubaya.projectuasnmp
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.squareup.picasso.Picasso
@@ -33,13 +36,23 @@ class MainActivity : AppCompatActivity() {
         var sharedFile = "com.ubaya.projectuasnmp"
         var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
             Context.MODE_PRIVATE )
+        var editor:SharedPreferences.Editor = shared.edit()
 
         val headView = navView.getHeaderView(0)
         headView.txtFullName.text = shared.getString("firstName", "") + " " + shared.getString("lastName", "")
         headView.txtUsername.text = shared.getString("username", "")
+        headView.fabLogOutProf.setOnClickListener(){
+            val intent = Intent(this, LoginActivity::class.java)
+            editor.clear()
+            editor.apply()
+            this.startActivity(intent)
+            this.finish()
+        }
 
-        val urlProf = "https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1085&q=80"
-        Picasso.get().load(urlProf).into(headView.imgProfile)
+        val urlProf = shared.getString("avatarImg", "")
+        if(urlProf != ""){
+            Picasso.get().load(urlProf).into(headView.imgProfile)
+        }
 
         val urlBack = "https://www.tutorialspoint.com/opencv/images/gaussian_blur.jpg"
         Picasso.get().load(urlBack).into(headView.imgBackground)
@@ -52,10 +65,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.itemSettings -> 3
                 else -> 0
             }
+            drawerLayout.closeDrawers()
             true
         }
-
-
 
         fragments.add(HomeFragment())
         fragments.add(MyCreationFragment())
