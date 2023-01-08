@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
             Context.MODE_PRIVATE )
         var editor:SharedPreferences.Editor = shared.edit()
 
+
+
         val headView = navView.getHeaderView(0)
         headView.txtFullName.text = shared.getString("firstName", "") + " " + shared.getString("lastName", "")
         headView.txtUsername.text = shared.getString("username", "")
@@ -81,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         viewpager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 bottomNav.selectedItemId = bottomNav.menu.getItem(position).itemId
+                navView.setCheckedItem(bottomNav.menu.getItem(position).itemId)
             }
         })
 
