@@ -55,6 +55,7 @@ class MyCreationFragment : Fragment() {
                             playObj.getString("bottom_text"),
                             playObj.getInt("num_likes"),
                             playObj.getInt("users_id"),
+                            playObj.getInt("total_comments"),
                         )
                         myCreationList.add(memes)
                     }

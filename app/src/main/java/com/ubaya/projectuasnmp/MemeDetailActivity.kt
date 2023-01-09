@@ -1,5 +1,6 @@
 package com.ubaya.projectuasnmp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -139,6 +140,7 @@ class MemeDetailActivity : AppCompatActivity() {
         recyclerView?.adapter = CommentAdapter(comments)
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun readComment(){
         val q = Volley.newRequestQueue(this)
         val url = "https://ubaya.fun/native/160420041/get_comments.php"
@@ -187,7 +189,6 @@ class MemeDetailActivity : AppCompatActivity() {
         var stringRequest = object:StringRequest(Request.Method.POST, url,
             Response.Listener<String> {
                 Log.d("apiresult", it)
-
                 val obj = JSONObject(it)
                 if(obj.getString("result") == "OK") {
                     Toast.makeText(this, "Comment Success", Toast.LENGTH_SHORT).show()
@@ -203,8 +204,7 @@ class MemeDetailActivity : AppCompatActivity() {
             override fun getParams() = hashMapOf(
                 "users_id" to shared.getInt("userId",0).toString(),
                 "memes_id" to meme_id.toString(),
-                "content" to txtWriteComment.text.toString(),
-                "publish_date" to LocalDate.now().toString()
+                "content" to txtWriteComment.text.toString()
             )
         }
         q.add(stringRequest)

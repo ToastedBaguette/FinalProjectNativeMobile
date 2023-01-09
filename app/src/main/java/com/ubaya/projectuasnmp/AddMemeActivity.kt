@@ -31,7 +31,7 @@ class AddMemeActivity : AppCompatActivity() {
                 Request.Method.POST, url,
                 Response.Listener{
                     Log.d("cekparams",it)
-                    Toast.makeText(this, "Berhasil tambah memes", Toast.LENGTH_SHORT).show() },
+                    Toast.makeText(this, "Add meme success", Toast.LENGTH_SHORT).show() },
                 Response.ErrorListener{
                     Log.d("cekparams",it.message.toString())
 

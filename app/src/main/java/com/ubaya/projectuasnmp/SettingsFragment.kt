@@ -1,10 +1,12 @@
 package com.ubaya.projectuasnmp
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -29,6 +31,8 @@ import org.json.JSONObject
 import java.util.*
 
 class SettingsFragment : Fragment() {
+    private val REQUEST_CODE_GALLERY:Int = 1
+    private val REQUEST_CODE_CAMERA:Int = 2
     var userId:Int = 0
     var userName = ""
     var firstName = ""
@@ -141,22 +145,22 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(activity, "Don't leave the first name empty, please!", Toast.LENGTH_SHORT).show()
             }
         }
-//        imgAvatar.setOnClickListener{
-//            val options = arrayOf<CharSequence>("Take from Gallery", "Take from Camera")
-//            val builder = AlertDialog.Builder(requireContext())
-//            builder.setTitle("Choose Picture")
-//            builder.setItems(options) { dialog, item ->
-//                if (options[item] == "Take from Gallery") {
-//                    val intent = Intent(Intent.ACTION_PICK)
-//                    intent.type = "image/*"
-//                    startActivityForResult(intent, REQUEST_CODE_GALLERY)
-//                } else if (options[item] == "Take from Camera") {
-//                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//                    startActivityForResult(intent, REQUEST_CODE_CAMERA)
-//                }
-//            }
-//            builder.show()
-//        }
+        imgAvatar.setOnClickListener{
+            val options = arrayOf<CharSequence>("Take from Gallery", "Take from Camera")
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose Picture")
+            builder.setItems(options) { dialog, item ->
+                if (options[item] == "Take from Gallery") {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    startActivityForResult(intent, REQUEST_CODE_GALLERY)
+                } else if (options[item] == "Take from Camera") {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, REQUEST_CODE_CAMERA)
+                }
+            }
+            builder.show()
+        }
         fabLogout.setOnClickListener{
             val intent = Intent(activity, LoginActivity::class.java)
             editor.clear()
