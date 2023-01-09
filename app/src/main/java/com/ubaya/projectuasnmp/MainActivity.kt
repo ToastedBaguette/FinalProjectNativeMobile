@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
             Context.MODE_PRIVATE )
         var editor:SharedPreferences.Editor = shared.edit()
 
-
-
         val headView = navView.getHeaderView(0)
         headView.txtFullName.text = shared.getString("firstName", "") + " " + shared.getString("lastName", "")
         headView.txtUsername.text = shared.getString("username", "")

@@ -50,7 +50,7 @@ class SettingsFragment : Fragment() {
         val sharedFile = "com.ubaya.projectuasnmp"
         val shared: SharedPreferences = context.getSharedPreferences(sharedFile, Context.MODE_PRIVATE)
         userId = shared.getInt("userId",0)
-        userName = shared.getString("userName","").toString()
+        userName = shared.getString("username","").toString()
         firstName = shared.getString("firstName","").toString()
         lastName = shared.getString("lastName","").toString()
         month = shared.getString("month","").toString()
