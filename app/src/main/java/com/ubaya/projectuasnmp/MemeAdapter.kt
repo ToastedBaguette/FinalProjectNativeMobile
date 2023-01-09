@@ -33,6 +33,7 @@ class MemeAdapter (val memes:ArrayList<Meme>, val userId:Int)
         context = recyclerView.context
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MemeViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
         val urlImg = memes[position].image_url
@@ -40,6 +41,8 @@ class MemeAdapter (val memes:ArrayList<Meme>, val userId:Int)
         holder.v.txtTop.text = memes[position].top_text
         holder.v.txtBottom.text = memes[position].bottom_text
         holder.v.txtLikes.text = memes[position].num_likes.toString()
+        holder.v.txtTotalComments.text = memes[position].total_comments.toString() + " Comment(s)"
+
 
         holder.v.btnComment.setOnClickListener{
             val intent = Intent(holder.v.context, MemeDetailActivity::class.java)
@@ -122,7 +125,7 @@ class MemeAdapter (val memes:ArrayList<Meme>, val userId:Int)
                 {
                     override fun getParams() = hashMapOf(
                         "idmemes" to memes[position].id.toString(),
-                        "idusers" to userId.toString()                    )
+                        "idusers" to userId.toString())
                 }
                 q.add(stringRequest)
             }

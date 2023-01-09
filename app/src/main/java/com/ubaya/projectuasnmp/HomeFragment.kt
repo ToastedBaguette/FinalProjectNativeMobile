@@ -54,7 +54,8 @@ class HomeFragment : Fragment() {
                             memeObj.getString("top_text"),
                             memeObj.getString("bottom_text"),
                             memeObj.getInt("num_likes"),
-                            memeObj.getInt("users_id")
+                            memeObj.getInt("users_id"),
+                            memeObj.getInt("total_comments")
                         )
                         memes.add(meme)
                     }
