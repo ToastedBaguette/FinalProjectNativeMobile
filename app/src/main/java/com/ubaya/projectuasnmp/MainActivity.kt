@@ -3,19 +3,18 @@ package com.ubaya.projectuasnmp
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.squareup.picasso.Picasso
+import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.card_meme.view.*
 import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.drawer_layout.*
-import kotlinx.android.synthetic.main.drawer_layout.view.*
 
 class MainActivity : AppCompatActivity() {
     val fragments:ArrayList<Fragment> = ArrayList()
@@ -54,8 +53,11 @@ class MainActivity : AppCompatActivity() {
             Picasso.get().load(urlProf).into(headView.imgProfile)
         }
 
-        val urlBack = "https://www.tutorialspoint.com/opencv/images/gaussian_blur.jpg"
-        Picasso.get().load(urlBack).into(headView.imgBackground)
+        val urlBack = "https://lumiere-a.akamaihd.net/v1/images/sa_pixar_virtualbg_up_16x9_1f36fba7.jpeg"
+
+        Glide.with(this).load(urlBack)
+            .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
+            .into(headView.imgBackground)
 
         navView.setNavigationItemSelectedListener {
             viewpager.currentItem  = when(it.itemId) {

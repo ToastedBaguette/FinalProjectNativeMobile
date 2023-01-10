@@ -17,8 +17,6 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 class HomeFragment : Fragment() {
 
@@ -81,8 +79,6 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_home, container, false)
         var view = inflater.inflate(R.layout.fragment_home, container, false)
         var fab : FloatingActionButton? = view.findViewById(R.id.fab)
         fab?.setOnClickListener() {
@@ -91,4 +87,6 @@ class HomeFragment : Fragment() {
         }
         return view
     }
+
+
 }
