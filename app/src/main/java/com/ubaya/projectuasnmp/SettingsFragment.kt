@@ -1,10 +1,15 @@
 package com.ubaya.projectuasnmp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -18,6 +23,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -28,11 +35,12 @@ import kotlinx.android.synthetic.main.activity_register.view.*
 import kotlinx.android.synthetic.main.card_meme.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 class SettingsFragment : Fragment() {
-    private val REQUEST_CODE_GALLERY:Int = 1
-    private val REQUEST_CODE_CAMERA:Int = 2
+    private val REQUEST_CODE_GALLERY = 1
+    private val REQUEST_CODE_CAMERA = 2
     var userId:Int = 0
     var userName = ""
     var firstName = ""
@@ -105,6 +113,12 @@ class SettingsFragment : Fragment() {
                 checked = if(cBHideName.isChecked){ 1 } else{ 0 }
                 changeFirstName = txtSettingFirstName?.text.toString()
                 changeLastName = if(txtSettingLastName?.text.isNullOrBlank()) { "" }else{ txtSettingLastName?.text.toString() }
+
+                val bitmap = (imgAvatar.drawable as BitmapDrawable).bitmap
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                val imageInByte = stream.toByteArray()
+
                 val q = Volley.newRequestQueue(activity)
                 val url = "https://ubaya.fun/native/160420041/changeprofile.php"
                 var stringRequest =
@@ -117,12 +131,15 @@ class SettingsFragment : Fragment() {
                                 editor.putString("firstName",changeFirstName)
                                 editor.putString("lastName",changeLastName)
                                 editor.putInt("privacySet",checked)
+//                                editor.putString("avatarImg"),
                                 editor.apply()
 
                                 txtName?.text = "$changeFirstName $changeLastName"
                                 txtSettingFirstName?.setText(changeFirstName)
                                 txtSettingLastName?.setText(if(changeLastName =="") "" else changeLastName)
                                 cBHideName.isChecked = checked == 1
+                                imgAvatar.setImageBitmap(bitmap)
+
 
                                 Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
                             }else{
@@ -137,6 +154,7 @@ class SettingsFragment : Fragment() {
                             "firstname" to changeFirstName,
                             "lastname" to changeLastName,
                             "privacySet" to checked.toString(),
+                            "avatar_img" to imageInByte.toString(),
                             "iduser" to userId.toString()
                         )
                     }
@@ -151,12 +169,21 @@ class SettingsFragment : Fragment() {
             builder.setTitle("Choose Picture")
             builder.setItems(options) { dialog, item ->
                 if (options[item] == "Take from Gallery") {
-                    val intent = Intent(Intent.ACTION_PICK)
-                    intent.type = "image/*"
-                    startActivityForResult(intent, REQUEST_CODE_GALLERY)
+                    if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_GALLERY)
+                    } else {
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.type = "image/*"
+                        startActivityForResult(intent, REQUEST_CODE_GALLERY)
+                    }
                 } else if (options[item] == "Take from Camera") {
-                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    startActivityForResult(intent, REQUEST_CODE_CAMERA)
+                    if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA)
+                    } else {
+                        val intent = Intent()
+                        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
+                        startActivityForResult(intent, REQUEST_CODE_CAMERA)
+                    }
                 }
             }
             builder.show()
@@ -169,5 +196,42 @@ class SettingsFragment : Fragment() {
             activity?.finish()
         }
         return v
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            REQUEST_CODE_CAMERA -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, REQUEST_CODE_CAMERA)
+                    Toast.makeText(requireContext(), "You must grant permission to access the camera.", Toast.LENGTH_SHORT).show()
+                } else{
+                    Toast.makeText(requireContext(), "You must grant permission to access the camera.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            REQUEST_CODE_GALLERY -> {
+                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    startActivityForResult(intent, REQUEST_CODE_GALLERY)
+                } else{
+                    Toast.makeText(requireContext(), "You must grant permission to access the gallery.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_CAMERA && data != null && data.extras != null) {
+            val extras = data.extras
+            val imageBitmap: Bitmap = extras?.get("data") as Bitmap
+            imgAvatar.setImageBitmap(imageBitmap)
+        } else if (requestCode == REQUEST_CODE_GALLERY && data != null && data.data != null) {
+            val filePath: Uri? = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+            imgAvatar.setImageBitmap(bitmap)
+        }
     }
 }

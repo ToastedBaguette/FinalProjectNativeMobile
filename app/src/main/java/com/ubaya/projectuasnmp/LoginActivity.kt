@@ -3,19 +3,19 @@ package com.ubaya.projectuasnmp
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_register.*
-import kotlinx.android.synthetic.main.activity_register.view.*
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,11 +62,9 @@ class LoginActivity : AppCompatActivity() {
                         month = data.getString("month")
                         year = data.getString("year")
                         avatarImg = data.getString("avatar_img")
-                        privacySet = data.getInt("privacy_setting")
 
                         var sharedFile = "com.ubaya.projectuasnmp"
-                        var shared: SharedPreferences = getSharedPreferences(sharedFile,
-                            Context.MODE_PRIVATE )
+                        var shared: SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
                         var editor:SharedPreferences.Editor = shared.edit()
 
                         editor.putInt("userId",userId)
@@ -75,9 +73,10 @@ class LoginActivity : AppCompatActivity() {
                         editor.putString("lastName",lastName)
                         editor.putString("month",month)
                         editor.putString("year",year)
-                        editor.putString("avatarImg",avatarImg)
+                        editor.putString("avatarImg", avatarImg)
                         editor.putInt("privacySet",privacySet)
                         editor.apply()
+
 
                         val intent = Intent(this, MainActivity::class.java)
                         this.startActivity(intent)
@@ -96,7 +95,6 @@ class LoginActivity : AppCompatActivity() {
                     )
                 }
             q.add(stringRequest)
-
         }
 
         btnCreateAccount.setOnClickListener {
