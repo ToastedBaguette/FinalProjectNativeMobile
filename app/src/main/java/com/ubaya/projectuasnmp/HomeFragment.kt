@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.SpinnerAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.json.JSONObject
 
 
@@ -24,6 +27,8 @@ class HomeFragment : Fragment() {
 
     var memes:ArrayList<Meme> = ArrayList()
     var userId = 0
+    var sorts= arrayOf("Newest", "Popularity", "Most Commented")
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -89,6 +94,11 @@ class HomeFragment : Fragment() {
         var fabComment : FloatingActionButton? = view.findViewById(R.id.fabSortComment)
         var fabLike :FloatingActionButton? = view.findViewById(R.id.fabSortLike)
         var fabClear :FloatingActionButton? = view.findViewById(R.id.fabSortClear)
+
+        spinSort?.adapter = ArrayAdapter(requireActivity(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, sorts) as SpinnerAdapter
+
+
+
 
         fabComment?.setOnClickListener(){
             val q = Volley.newRequestQueue(activity)

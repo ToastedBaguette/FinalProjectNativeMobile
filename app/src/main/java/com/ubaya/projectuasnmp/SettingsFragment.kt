@@ -26,6 +26,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.drawer_header.view.*
+import kotlinx.android.synthetic.main.drawer_layout.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -100,6 +102,7 @@ class SettingsFragment : Fragment() {
 
         btnSaveChanges?.setOnClickListener{
             if(!txtSettingFirstName.text.isNullOrBlank()){
+
                 firstName = shared.getString("firstName","").toString()
                 lastName = shared.getString("lastName","").toString()
                 checked = if(cBHideName.isChecked){ 1 } else{ 0 }
@@ -108,7 +111,7 @@ class SettingsFragment : Fragment() {
 
                 val bitmap = (imgAvatar.drawable as BitmapDrawable).bitmap
                 val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, stream)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 val imageInByte = stream.toByteArray()
                 val encodeImageString = Base64.encodeToString(imageInByte, Base64.DEFAULT)
 
@@ -125,15 +128,12 @@ class SettingsFragment : Fragment() {
                                 editor.putString("firstName",changeFirstName)
                                 editor.putString("lastName",changeLastName)
                                 editor.putInt("privacySet",checked)
-//                                editor.putString("avatarImg"),
+                                editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile"+userId.toString()+".jpg")
                                 editor.apply()
 
-                                txtName?.text = "$changeFirstName $changeLastName"
-                                txtSettingFirstName?.setText(changeFirstName)
-                                txtSettingLastName?.setText(if(changeLastName =="") "" else changeLastName)
-                                cBHideName.isChecked = checked == 1
-                                imgAvatar.setImageBitmap(bitmap)
-
+                                val intent = Intent(activity, LoginActivity::class.java)
+                                this.startActivity(intent)
+                                activity?.finish()
 
                                 Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
                             }else{
