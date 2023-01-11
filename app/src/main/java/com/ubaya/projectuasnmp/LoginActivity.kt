@@ -3,8 +3,6 @@ package com.ubaya.projectuasnmp
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +13,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
             Context.MODE_PRIVATE )
         userId = shared.getInt("userId",0)
 
+//        Direct to activity main if user already login
         if (userId != 0){
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)
@@ -46,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
         btnSignIn.setOnClickListener{
             var username = txtLoginUsername.text.toString()
             var password = txtLoginPassword.text.toString()
+
             val q = Volley.newRequestQueue(this)
             val url = "https://ubaya.fun/native/160420041/login.php"
             var stringRequest = object:StringRequest(

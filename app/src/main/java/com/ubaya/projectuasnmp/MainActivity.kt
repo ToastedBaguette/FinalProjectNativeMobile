@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MenuAdapter(this, fragments)
         viewpager.adapter = adapter
-
         viewpager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 bottomNav.selectedItemId = bottomNav.menu.getItem(position).itemId

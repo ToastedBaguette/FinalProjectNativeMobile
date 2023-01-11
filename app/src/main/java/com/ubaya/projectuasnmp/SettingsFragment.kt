@@ -12,31 +12,23 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.android.volley.Request
+import androidx.fragment.app.Fragment
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_register.view.*
-import kotlinx.android.synthetic.main.card_meme.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import java.util.*
 
 class SettingsFragment : Fragment() {
     private val REQUEST_CODE_GALLERY = 1
@@ -116,14 +108,16 @@ class SettingsFragment : Fragment() {
 
                 val bitmap = (imgAvatar.drawable as BitmapDrawable).bitmap
                 val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, stream)
                 val imageInByte = stream.toByteArray()
+                val encodeImageString = Base64.encodeToString(imageInByte, Base64.DEFAULT)
 
                 val q = Volley.newRequestQueue(activity)
                 val url = "https://ubaya.fun/native/160420041/changeprofile.php"
                 var stringRequest =
                     @SuppressLint("SetTextI18n")
-                    object:StringRequest(Request.Method.POST, url,
+                    object:StringRequest(
+                        Method.POST, url,
                         Response.Listener<String> {
                             Log.d("apiresult", it)
                             val obj = JSONObject(it)
@@ -149,16 +143,16 @@ class SettingsFragment : Fragment() {
                         Response.ErrorListener {
                             Log.e("apiresult", it.message.toString())
                         })
-                    {
-                        override fun getParams() = hashMapOf(
-                            "firstname" to changeFirstName,
-                            "lastname" to changeLastName,
-                            "privacySet" to checked.toString(),
-                            "avatar_img" to imageInByte.toString(),
-                            "iduser" to userId.toString()
-                        )
-                    }
-                q.add(stringRequest)
+                        {
+                            override fun getParams() = hashMapOf(
+                                "firstname" to changeFirstName,
+                                "lastname" to changeLastName,
+                                "privacySet" to checked.toString(),
+                                "avatar_img" to encodeImageString,
+                                "iduser" to userId.toString()
+                            )
+                        }
+                    q.add(stringRequest)
             }else{
                 Toast.makeText(activity, "Don't leave the first name empty, please!", Toast.LENGTH_SHORT).show()
             }
