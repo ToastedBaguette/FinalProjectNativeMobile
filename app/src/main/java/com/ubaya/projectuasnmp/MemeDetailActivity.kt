@@ -192,6 +192,7 @@ class MemeDetailActivity : AppCompatActivity() {
                 val obj = JSONObject(it)
                 if(obj.getString("result") == "OK") {
                     Toast.makeText(this, "Comment Success", Toast.LENGTH_SHORT).show()
+                    txtWriteComment.setText("")
                 }else{
                     Toast.makeText(this, "Comment Fail", Toast.LENGTH_SHORT).show()
                 }

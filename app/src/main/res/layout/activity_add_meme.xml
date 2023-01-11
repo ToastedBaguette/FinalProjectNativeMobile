@@ -28,12 +28,11 @@
                     android:layout_width="381dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:text="SUBMIT"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnPreview" />
+                    tools:layout_editor_absoluteY="648dp" />
 
                 <TextView
                     android:id="@+id/textView5"
@@ -44,16 +43,6 @@
                     android:text="Top Text"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txtImageURLCreate" />
-
-                <Button
-                    android:id="@+id/btnPreview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="Preview"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtBottomTextCreate" />
 
                 <TextView
                     android:id="@+id/textView8"
