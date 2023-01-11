@@ -37,12 +37,12 @@ class HomeFragment : Fragment() {
         super.onResume()
         val q = Volley.newRequestQueue(activity)
         val url = "https://ubaya.fun/native/160420041/get_memes.php"
-        var stringRequest = StringRequest(
+        var stringRequest = object:StringRequest(
             Request.Method.POST, url,
-            {
+            Response.Listener<String> {
                 Log.d("apiresult", it)
                 val obj = JSONObject(it)
-                if(obj.getString("result") == "OK") {
+                if(obj.getString("result")=="OK"){
                     val data = obj.getJSONArray("data")
                     memes.clear()
                     for(i in 0 until data.length()) {
@@ -59,12 +59,16 @@ class HomeFragment : Fragment() {
                         memes.add(meme)
                     }
                     updateList()
-                    Log.d("cekisiarray", memes.toString())
                 }
             },
-            {
+            Response.ErrorListener {
                 Log.e("apiresult", it.message.toString())
             })
+        {
+            override fun getParams() = hashMapOf(
+                "sort" to "clear",
+            )
+        }
         q.add(stringRequest)
     }
 
