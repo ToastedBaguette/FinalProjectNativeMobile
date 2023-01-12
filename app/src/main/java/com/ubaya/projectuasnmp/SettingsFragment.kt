@@ -27,7 +27,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -100,16 +103,10 @@ class SettingsFragment : Fragment() {
         var editor:SharedPreferences.Editor = shared.edit()
 
         if(avatarImg!=""){
-            Picasso.get().load(avatarImg).into(object : com.squareup.picasso.Target {
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                    val bitmap = bitmap
-                    imgAvatar.setImageBitmap(bitmap)
-                }
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
-            })
+            Picasso.get().load(avatarImg).memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE).into(imgAvatar)
         }
+
         btnSaveChanges?.setOnClickListener{
             if(!txtSettingFirstName.text.isNullOrBlank()){
 
@@ -148,9 +145,10 @@ class SettingsFragment : Fragment() {
                                     editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile$userId.jpg")
                                     editor.apply()
 
+
+                                    activity?.finish()
                                     val intent = Intent(activity, LoginActivity::class.java)
                                     this.startActivity(intent)
-                                    activity?.finish()
 
                                     Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
                                 }else{

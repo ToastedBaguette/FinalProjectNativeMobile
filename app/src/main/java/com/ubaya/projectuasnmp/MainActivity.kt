@@ -16,6 +16,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_main.*
@@ -58,7 +60,8 @@ class MainActivity : AppCompatActivity() {
 
         val urlProf = shared.getString("avatarImg", "")
         if(urlProf != ""){
-            Picasso.get().load(urlProf).into(headView.imgProfile)
+            Picasso.get().load(urlProf).memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE).into(headView.imgProfile)
         }
 
         var urlBack = "https://ubaya.fun/native/160420041/images/background_default.jpg"
