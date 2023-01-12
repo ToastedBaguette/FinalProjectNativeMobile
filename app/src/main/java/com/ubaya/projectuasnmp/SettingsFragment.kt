@@ -3,6 +3,7 @@ package com.ubaya.projectuasnmp
 import android.Manifest
 import android.R.attr.bitmap
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -73,17 +74,6 @@ class SettingsFragment : Fragment() {
         txtSettingUsername.text = userName
         txtSettingFirstName.setText(firstName)
         txtSettingLastName.setText(if(lastName =="") "" else lastName)
-        if(avatarImg!=""){
-           Picasso.get().load(avatarImg).into(object : com.squareup.picasso.Target {
-                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                    val bitmap = bitmap
-                    imgAvatar.setImageBitmap(bitmap)
-                }
-                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
-
-                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
-            })
-        }
 
         cBHideName.isChecked = privacySet == 1
         super.onResume()
@@ -93,6 +83,7 @@ class SettingsFragment : Fragment() {
         refreshSharedPreferences(context)
     }
 
+    @SuppressLint("IntentReset")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -110,6 +101,17 @@ class SettingsFragment : Fragment() {
         val shared: SharedPreferences = v.context.getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
         var editor:SharedPreferences.Editor = shared.edit()
 
+        if(avatarImg!=""){
+            Picasso.get().load(avatarImg).into(object : com.squareup.picasso.Target {
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    val bitmap = bitmap
+                    imgAvatar.setImageBitmap(bitmap)
+                }
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+            })
+        }
         btnSaveChanges?.setOnClickListener{
             if(!txtSettingFirstName.text.isNullOrBlank()){
 
@@ -208,7 +210,7 @@ class SettingsFragment : Fragment() {
                     if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_GALLERY)
                     }else{
-                        val intent = Intent(Intent.ACTION_PICK)
+                        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                         intent.type = "image/*"
                         startActivityForResult(intent, REQUEST_CODE_GALLERY)
                     }
@@ -216,8 +218,7 @@ class SettingsFragment : Fragment() {
                     if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA)
                     }else{
-                        val intent = Intent()
-                        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
+                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                         startActivityForResult(intent, REQUEST_CODE_CAMERA)
                     }
                 }
@@ -236,20 +237,20 @@ class SettingsFragment : Fragment() {
         return v
     }
 
+    @SuppressLint("IntentReset")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
             REQUEST_CODE_CAMERA -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     startActivityForResult(intent, REQUEST_CODE_CAMERA)
-                    Toast.makeText(requireContext(), "You must grant permission to access the camera.", Toast.LENGTH_SHORT).show()
                 } else{
                     Toast.makeText(requireContext(), "You must grant permission to access the camera.", Toast.LENGTH_SHORT).show()
                 }
             }
             REQUEST_CODE_GALLERY -> {
                 if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    val intent = Intent(Intent.ACTION_PICK)
+                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                     intent.type = "image/*"
                     startActivityForResult(intent, REQUEST_CODE_GALLERY)
                 } else{
@@ -262,14 +263,15 @@ class SettingsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CAMERA && data != null && data.data != null) {
+        if (requestCode == REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK && data != null) {
             val extras = data.extras
-            val imageBitmap: Bitmap = extras?.get("data") as Bitmap
-            imgAvatar.setImageBitmap(imageBitmap)
-
-        } else if (requestCode == REQUEST_CODE_GALLERY && data != null && data.data != null) {
+            val bitmap = extras!!.get("data") as Bitmap
+            imgAvatar.setImageBitmap(null)
+            imgAvatar.setImageBitmap(bitmap)
+        } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             val filePath: Uri? = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+            imgAvatar.setImageBitmap(null)
             imgAvatar.setImageBitmap(bitmap)
         }
     }
