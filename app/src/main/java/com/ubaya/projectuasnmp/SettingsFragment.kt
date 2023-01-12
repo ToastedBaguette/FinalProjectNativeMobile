@@ -262,8 +262,8 @@ class SettingsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CAMERA) {
-            val extras = data?.extras
+        if (requestCode == REQUEST_CODE_CAMERA && data != null && data.data != null) {
+            val extras = data.extras
             val imageBitmap: Bitmap = extras?.get("data") as Bitmap
             imgAvatar.setImageBitmap(imageBitmap)
 
