@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             Picasso.get().load(urlProf).into(headView.imgProfile)
         }
 
-        var urlBack = "https://lumiere-a.akamaihd.net/v1/images/sa_pixar_virtualbg_up_16x9_1f36fba7.jpeg"
+        var urlBack = "https://ubaya.fun/native/160420041/images/background_default.jpg"
         val q = Volley.newRequestQueue(this)
         val url = "https://ubaya.fun/native/160420041/get_background.php"
         var stringRequest = object:StringRequest(
@@ -75,13 +75,12 @@ class MainActivity : AppCompatActivity() {
                     for(i in 0 until data.length()){
                         val playObj = data.getJSONObject(i)
                         urlBack = playObj.getString("image_url")
-                        Glide.with(this).load(urlBack)
-                            .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
-                            .into(headView.imgBackground)
-
                     }
-                    Log.d("playobj", urlBack)
                 }
+
+                Glide.with(this).load(urlBack)
+                    .apply(RequestOptions.bitmapTransform(BlurTransformation(25, 3)))
+                    .into(headView.imgBackground)
             },
             Response.ErrorListener {
                 Log.e("apiresult", it.message.toString())

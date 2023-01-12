@@ -13,7 +13,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_add_meme.*
-import kotlinx.android.synthetic.main.card_meme.*
 
 class AddMemeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,8 +21,8 @@ class AddMemeActivity : AppCompatActivity() {
 
         var sharedFile = "com.ubaya.projectuasnmp"
         var shared: SharedPreferences = getSharedPreferences(sharedFile, Context.MODE_PRIVATE )
-        var editor: SharedPreferences.Editor = shared.edit()
 
+        //change image when inputting the url
         txtImageURLCreate.addTextChangedListener {
             if (txtImageURLCreate.text.toString() != "") {
                 var url = txtImageURLCreate.text.toString()
@@ -31,14 +30,17 @@ class AddMemeActivity : AppCompatActivity() {
             }
         }
 
+        //change top text  when inputting the text
         txtTopTextCreate.addTextChangedListener {
             txtTopPreview.text = (txtTopTextCreate.text.toString())
         }
 
+        //change bottom text  when inputting the text
         txtBottomTextCreate.addTextChangedListener {
             txtBottomPreview.text = (txtBottomTextCreate.text.toString())
         }
 
+        //add memes to server
         btnSubmit.setOnClickListener(){
             var userId = shared.getInt("userId",0)
             val q= Volley.newRequestQueue(it.context)

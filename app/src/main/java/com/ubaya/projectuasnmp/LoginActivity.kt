@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             Context.MODE_PRIVATE )
         userId = shared.getInt("userId",0)
 
-//        Direct to activity main if user already login
+        //Direct to activity main if user already login
         if (userId != 0){
             val intent = Intent(this, MainActivity::class.java)
             this.startActivity(intent)

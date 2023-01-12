@@ -1,23 +1,15 @@
 package com.ubaya.projectuasnmp
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -25,7 +17,6 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.json.JSONObject
 
 
@@ -33,7 +24,6 @@ class HomeFragment : Fragment() {
 
     var memes:ArrayList<Meme> = ArrayList()
     var userId = 0
-    var sorts= arrayOf("Newest", "Popularity", "Most Commented")
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -51,6 +41,7 @@ class HomeFragment : Fragment() {
     }
 
     fun updateList() {
+        //Update Recycle View
         val lm: LinearLayoutManager = LinearLayoutManager(activity)
         var recyclerView = view?.findViewById<RecyclerView>(R.id.memelistView)
         recyclerView?.layoutManager = lm
@@ -67,6 +58,8 @@ class HomeFragment : Fragment() {
         var fabFilter :FloatingActionButton? = view.findViewById(R.id.fabFilter)
 
         fabFilter?.setOnClickListener(){
+
+            //build alert & get memes by selected sorting method
             val options = arrayOf<CharSequence>("Newest", "Popularity", "Most Commented")
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Sort Memes By")
@@ -83,6 +76,7 @@ class HomeFragment : Fragment() {
         }
 
         fab?.setOnClickListener() {
+            //intent to meme creation
             val intent = Intent(activity, AddMemeActivity::class.java)
             activity?.startActivity(intent)
         }
