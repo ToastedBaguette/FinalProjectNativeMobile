@@ -26,8 +26,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.drawer_header.view.*
-import kotlinx.android.synthetic.main.drawer_layout.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -103,46 +101,53 @@ class SettingsFragment : Fragment() {
         btnSaveChanges?.setOnClickListener{
             if(!txtSettingFirstName.text.isNullOrBlank()){
 
-                firstName = shared.getString("firstName","").toString()
-                lastName = shared.getString("lastName","").toString()
-                checked = if(cBHideName.isChecked){ 1 } else{ 0 }
-                changeFirstName = txtSettingFirstName?.text.toString()
-                changeLastName = if(txtSettingLastName?.text.isNullOrBlank()) { "" }else{ txtSettingLastName?.text.toString() }
+                //Set Confirmation Dialog for changing data
+                val alertChangeData = AlertDialog.Builder(requireContext())
+                alertChangeData.setTitle("Change Profile")
+                alertChangeData.setMessage("Are you sure sant to change profile?")
 
-                val bitmap = (imgAvatar.drawable as BitmapDrawable).bitmap
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                val imageInByte = stream.toByteArray()
-                val encodeImageString = Base64.encodeToString(imageInByte, Base64.DEFAULT)
+                //if confirmation is yes, changes data and restart activity
+                alertChangeData.setPositiveButton("Yes") { dialog, which ->
+                    firstName = shared.getString("firstName","").toString()
+                    lastName = shared.getString("lastName","").toString()
+                    checked = if(cBHideName.isChecked){ 1 } else{ 0 }
+                    changeFirstName = txtSettingFirstName?.text.toString()
+                    changeLastName = if(txtSettingLastName?.text.isNullOrBlank()) { "" }else{ txtSettingLastName?.text.toString() }
 
-                val q = Volley.newRequestQueue(activity)
-                val url = "https://ubaya.fun/native/160420041/changeprofile.php"
-                var stringRequest =
-                    @SuppressLint("SetTextI18n")
-                    object:StringRequest(
-                        Method.POST, url,
-                        Response.Listener<String> {
-                            Log.d("apiresult", it)
-                            val obj = JSONObject(it)
-                            if(obj.getString("result")=="OK"){
-                                editor.putString("firstName",changeFirstName)
-                                editor.putString("lastName",changeLastName)
-                                editor.putInt("privacySet",checked)
-                                editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile"+userId.toString()+".jpg")
-                                editor.apply()
+                    val bitmap = (imgAvatar.drawable as BitmapDrawable).bitmap
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    val imageInByte = stream.toByteArray()
+                    val encodeImageString = Base64.encodeToString(imageInByte, Base64.DEFAULT)
 
-                                val intent = Intent(activity, LoginActivity::class.java)
-                                this.startActivity(intent)
-                                activity?.finish()
+                    val q = Volley.newRequestQueue(activity)
+                    val url = "https://ubaya.fun/native/160420041/changeprofile.php"
+                    var stringRequest =
+                        @SuppressLint("SetTextI18n")
+                        object:StringRequest(
+                            Method.POST, url,
+                            Response.Listener<String> {
+                                Log.d("apiresult", it)
+                                val obj = JSONObject(it)
+                                if(obj.getString("result")=="OK"){
+                                    editor.putString("firstName",changeFirstName)
+                                    editor.putString("lastName",changeLastName)
+                                    editor.putInt("privacySet",checked)
+                                    editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile"+userId.toString()+".jpg")
+                                    editor.apply()
 
-                                Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
-                            }else{
-                                Log.e("error","Failed to save")
-                            }
-                        },
-                        Response.ErrorListener {
-                            Log.e("apiresult", it.message.toString())
-                        })
+                                    val intent = Intent(activity, LoginActivity::class.java)
+                                    this.startActivity(intent)
+                                    activity?.finish()
+
+                                    Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Log.e("error","Failed to save")
+                                }
+                            },
+                            Response.ErrorListener {
+                                Log.e("apiresult", it.message.toString())
+                            })
                         {
                             override fun getParams() = hashMapOf(
                                 "firstname" to changeFirstName,
@@ -153,14 +158,39 @@ class SettingsFragment : Fragment() {
                             )
                         }
                     q.add(stringRequest)
+                }
+
+                //if confirmation is no, revert to previous data
+                alertChangeData.setNegativeButton("No") { dialog, which ->
+                    if(lastName == "null"){
+                        lastName = ""
+                    }
+                    txtName.text = "$firstName $lastName"
+                    txtActiveStatus.text = "Active since $month $year"
+                    txtSettingUsername.text = userName
+                    txtSettingFirstName.setText(firstName)
+                    txtSettingLastName.setText(if(lastName =="") "" else lastName)
+                    if(avatarImg!=""){
+                        Picasso.get().load(avatarImg).into(imgAvatar)
+                    }
+                    cBHideName.isChecked = privacySet == 1
+
+                    Toast.makeText(activity, "Revert changes", Toast.LENGTH_SHORT).show()
+                }
+
+                alertChangeData.show()
+
+
             }else{
                 Toast.makeText(activity, "Don't leave the first name empty, please!", Toast.LENGTH_SHORT).show()
             }
         }
+
         imgAvatar.setOnClickListener{
             val options = arrayOf<CharSequence>("Take from Gallery", "Take from Camera")
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Choose Picture")
+
             builder.setItems(options) { dialog, item ->
                 if (options[item] == "Take from Gallery") {
                     if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -182,6 +212,7 @@ class SettingsFragment : Fragment() {
             }
             builder.show()
         }
+
         fabLogout.setOnClickListener{
             val intent = Intent(activity, LoginActivity::class.java)
             editor.clear()
@@ -189,6 +220,7 @@ class SettingsFragment : Fragment() {
             this.startActivity(intent)
             activity?.finish()
         }
+
         return v
     }
 

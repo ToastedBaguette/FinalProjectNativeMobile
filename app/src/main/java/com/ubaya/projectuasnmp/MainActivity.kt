@@ -30,6 +30,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //Set up Shared prefereneces
+        var sharedFile = "com.ubaya.projectuasnmp"
+        var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
+            Context.MODE_PRIVATE )
+        var editor:SharedPreferences.Editor = shared.edit()
+
         //set up drawer layout
         setContentView(R.layout.drawer_layout)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -39,11 +45,7 @@ class MainActivity : AppCompatActivity() {
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerToggle.syncState()
 
-        var sharedFile = "com.ubaya.projectuasnmp"
-        var shared: SharedPreferences = this.getSharedPreferences(sharedFile,
-            Context.MODE_PRIVATE )
-        var editor:SharedPreferences.Editor = shared.edit()
-
+        //get head view from navigation and set up head view data
         val headView = navView.getHeaderView(0)
         headView.txtFullName.text = shared.getString("firstName", "") + " " + shared.getString("lastName", "")
         headView.txtUsername.text = shared.getString("username", "")
@@ -61,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         var urlBack = "https://lumiere-a.akamaihd.net/v1/images/sa_pixar_virtualbg_up_16x9_1f36fba7.jpeg"
-
         val q = Volley.newRequestQueue(this)
         val url = "https://ubaya.fun/native/160420041/get_background.php"
         var stringRequest = object:StringRequest(
@@ -93,7 +94,13 @@ class MainActivity : AppCompatActivity() {
         }
         q.add(stringRequest)
 
+        //add fragment to main activity
+        fragments.add(HomeFragment())
+        fragments.add(MyCreationFragment())
+        fragments.add(LeaderboardFragment())
+        fragments.add(SettingsFragment())
 
+        //set up navigation ref to fragment
         navView.setNavigationItemSelectedListener {
             viewpager.currentItem  = when(it.itemId) {
                 R.id.itemHome -> 0
@@ -106,21 +113,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        fragments.add(HomeFragment())
-        fragments.add(MyCreationFragment())
-        fragments.add(LeaderboardFragment())
-        fragments.add(SettingsFragment())
-
-
-        val adapter = MenuAdapter(this, fragments)
-        viewpager.adapter = adapter
-        viewpager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                bottomNav.selectedItemId = bottomNav.menu.getItem(position).itemId
-                navView.setCheckedItem(bottomNav.menu.getItem(position).itemId)
-            }
-        })
-
+        //set up bottom navigation ref to fragment
         bottomNav.setOnItemSelectedListener {
             viewpager.currentItem  = when(it.itemId) {
                 R.id.itemHome -> 0
@@ -131,5 +124,15 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        //sync selected item from navigation and bottom navigation
+        val adapter = MenuAdapter(this, fragments)
+        viewpager.adapter = adapter
+        viewpager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                bottomNav.selectedItemId = bottomNav.menu.getItem(position).itemId
+                navView.setCheckedItem(bottomNav.menu.getItem(position).itemId)
+            }
+        })
     }
 }

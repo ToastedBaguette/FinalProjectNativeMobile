@@ -143,7 +143,7 @@
             style="@style/ThemeOverlay.Material3.MaterialAlertDialog"
             android:layout_width="383dp"
             android:layout_height="63dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="Save Changes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
