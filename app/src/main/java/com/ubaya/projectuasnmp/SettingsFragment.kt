@@ -1,7 +1,6 @@
 package com.ubaya.projectuasnmp
 
 import android.Manifest
-import android.R.attr.bitmap
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -32,7 +31,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-
 
 class SettingsFragment : Fragment() {
     private val REQUEST_CODE_GALLERY = 1
@@ -83,7 +81,7 @@ class SettingsFragment : Fragment() {
         refreshSharedPreferences(context)
     }
 
-    @SuppressLint("IntentReset")
+    @SuppressLint("IntentReset", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -118,7 +116,7 @@ class SettingsFragment : Fragment() {
                 //Set Confirmation Dialog for changing data
                 val alertChangeData = AlertDialog.Builder(requireContext())
                 alertChangeData.setTitle("Change Profile")
-                alertChangeData.setMessage("Are you sure sant to change profile?")
+                alertChangeData.setMessage("Are you sure want to change profile?")
 
                 //if confirmation is yes, changes data and restart activity
                 alertChangeData.setPositiveButton("Yes") { dialog, which ->
@@ -147,7 +145,7 @@ class SettingsFragment : Fragment() {
                                     editor.putString("firstName",changeFirstName)
                                     editor.putString("lastName",changeLastName)
                                     editor.putInt("privacySet",checked)
-                                    editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile"+userId.toString()+".jpg")
+                                    editor.putString("avatarImg", "https://ubaya.fun/native/160420041/images/usrprofile$userId.jpg")
                                     editor.apply()
 
                                     val intent = Intent(activity, LoginActivity::class.java)
@@ -237,6 +235,7 @@ class SettingsFragment : Fragment() {
         return v
     }
 
+    @Deprecated("Deprecated in Java")
     @SuppressLint("IntentReset")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
@@ -266,12 +265,10 @@ class SettingsFragment : Fragment() {
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK && data != null) {
             val extras = data.extras
             val bitmap = extras!!.get("data") as Bitmap
-            imgAvatar.setImageBitmap(null)
             imgAvatar.setImageBitmap(bitmap)
         } else if (requestCode == REQUEST_CODE_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             val filePath: Uri? = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-            imgAvatar.setImageBitmap(null)
             imgAvatar.setImageBitmap(bitmap)
         }
     }

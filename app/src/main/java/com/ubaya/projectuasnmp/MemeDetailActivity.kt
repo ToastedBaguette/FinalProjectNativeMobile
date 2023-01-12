@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_meme_detail.*
 import kotlinx.android.synthetic.main.card_meme.view.*
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import kotlin.collections.ArrayList
 
 private const val ARG_MEME = "meme"

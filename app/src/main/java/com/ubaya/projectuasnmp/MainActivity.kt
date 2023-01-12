@@ -1,5 +1,6 @@
 package com.ubaya.projectuasnmp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -18,7 +19,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.squareup.picasso.Picasso
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_meme_detail.*
 import kotlinx.android.synthetic.main.drawer_header.view.*
 import kotlinx.android.synthetic.main.drawer_layout.*
 import org.json.JSONObject
@@ -26,6 +26,7 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
     val fragments:ArrayList<Fragment> = ArrayList()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,9 +40,7 @@ class MainActivity : AppCompatActivity() {
         //set up drawer layout
         setContentView(R.layout.drawer_layout)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        var drawerToggle =
-            ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.app_name,
-                R.string.app_name)
+        var drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.app_name, R.string.app_name)
         drawerToggle.isDrawerIndicatorEnabled = true
         drawerToggle.syncState()
 

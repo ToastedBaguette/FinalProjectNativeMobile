@@ -11,8 +11,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_register.*
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +18,6 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         btnRegister.setOnClickListener {
-            val sdf = SimpleDateFormat("yyyy/M/dd hh:mm:ss")
-            val currentDate = sdf.format(Date())
             if (txtPassword.text.toString() == txtRptPassword.text.toString()){
                 val q = Volley.newRequestQueue(this)
                 val url = "https://ubaya.fun/native/160420041/register.php"
@@ -46,7 +42,6 @@ class RegisterActivity : AppCompatActivity() {
                         "first_name" to txtFirstName.text.toString(),
                         "password" to txtPassword.text.toString(),
                         "last_name" to txtLastName.text.toString(),
-                        "date_regist" to currentDate,
                         "avatar_img" to "",
                         "privacy_setting" to "0"
                     )
