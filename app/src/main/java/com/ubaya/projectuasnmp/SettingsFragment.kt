@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,10 +26,13 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class SettingsFragment : Fragment() {
     private val REQUEST_CODE_GALLERY = 1
@@ -71,8 +75,17 @@ class SettingsFragment : Fragment() {
         txtSettingFirstName.setText(firstName)
         txtSettingLastName.setText(if(lastName =="") "" else lastName)
         if(avatarImg!=""){
-            Picasso.get().load(avatarImg).into(imgAvatar)
+           Picasso.get().load(avatarImg).into(object : com.squareup.picasso.Target {
+                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                    val bitmap = bitmap
+                    imgAvatar.setImageBitmap(bitmap)
+                }
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
+
+                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+            })
         }
+
         cBHideName.isChecked = privacySet == 1
         super.onResume()
     }
@@ -195,7 +208,7 @@ class SettingsFragment : Fragment() {
                 if (options[item] == "Take from Gallery") {
                     if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE_GALLERY)
-                    } else {
+                    }else{
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "image/*"
                         startActivityForResult(intent, REQUEST_CODE_GALLERY)
@@ -203,7 +216,7 @@ class SettingsFragment : Fragment() {
                 } else if (options[item] == "Take from Camera") {
                     if(ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), REQUEST_CODE_CAMERA)
-                    } else {
+                    }else{
                         val intent = Intent()
                         intent.action = MediaStore.ACTION_IMAGE_CAPTURE
                         startActivityForResult(intent, REQUEST_CODE_CAMERA)
@@ -251,9 +264,10 @@ class SettingsFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_CAMERA && data != null && data.extras != null) {
-            val extras = data.extras
-            val imageBitmap: Bitmap = extras?.get("data") as Bitmap
-            imgAvatar.setImageBitmap(imageBitmap)
+            val filePath: Uri? = data.data
+            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+            imgAvatar.setImageBitmap(bitmap)
+
         } else if (requestCode == REQUEST_CODE_GALLERY && data != null && data.data != null) {
             val filePath: Uri? = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
