@@ -1,6 +1,7 @@
 package com.ubaya.projectuasnmp
 
 import android.Manifest
+import android.R.attr.bitmap
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
@@ -26,13 +27,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
+
 
 class SettingsFragment : Fragment() {
     private val REQUEST_CODE_GALLERY = 1
@@ -263,10 +262,10 @@ class SettingsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_CAMERA && data != null && data.extras != null) {
-            val filePath: Uri? = data.data
-            val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-            imgAvatar.setImageBitmap(bitmap)
+        if (requestCode == REQUEST_CODE_CAMERA) {
+            val extras = data?.extras
+            val imageBitmap: Bitmap = extras?.get("data") as Bitmap
+            imgAvatar.setImageBitmap(imageBitmap)
 
         } else if (requestCode == REQUEST_CODE_GALLERY && data != null && data.data != null) {
             val filePath: Uri? = data.data
