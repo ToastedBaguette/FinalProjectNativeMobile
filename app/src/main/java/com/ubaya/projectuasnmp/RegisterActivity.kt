@@ -31,6 +31,7 @@ class RegisterActivity : AppCompatActivity() {
                             Toast.makeText(this, obj.getString("message"), Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, LoginActivity::class.java)
                             this.startActivity(intent)
+                            finish()
                         }
                     },
                     Response.ErrorListener {

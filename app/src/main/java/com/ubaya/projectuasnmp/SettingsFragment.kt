@@ -147,7 +147,7 @@ class SettingsFragment : Fragment() {
 
 
                                     activity?.finish()
-                                    val intent = Intent(activity, LoginActivity::class.java)
+                                    val intent = Intent(activity, MainActivity::class.java)
                                     this.startActivity(intent)
 
                                     Toast.makeText(activity, "Save changes success", Toast.LENGTH_SHORT).show()
